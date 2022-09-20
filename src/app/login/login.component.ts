@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ApiRestService } from '../api-rest.service';
+import { ResolveEnd, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -7,15 +9,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  user:string = 'admin';
-  pass:string = '';
+  user: string = 'admin';
+  pass: string = '';
 
-  constructor() { }
+  constructor(private rest: ApiRestService, private router:Router, private msg:ToastrService) { }
 
   ngOnInit(): void {
   }
 
-  entrar(){
-    alert('yujuuuuuu' + this.user + " " + this.pass);
+  entrar() {
+    this.rest.login(this.user, this.pass).subscribe(
+      response => {
+        this.rest.setUser(response.user);
+        localStorage.setItem('token', response.token)
+        this.router.navigate(['/home']);
+        this.msg.success('Bienvenido');
+      },
+      error => {
+        this.msg.error('Usuario o contrasena incorrecta', error.status)
+      }
+    );
   }
 }
