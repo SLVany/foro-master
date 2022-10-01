@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
         this.rest.setUser(response.user);
         localStorage.setItem('token', response.token)
         this.router.navigate(['/home']);
-        this.msg.success('Bienvenido');
+        this.msg.success('Te damos la bienvenida', this.user);
       },
       error => {
         this.msg.error('Usuario o contrasena incorrecta', error.status)
